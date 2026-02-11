@@ -1,6 +1,9 @@
 
-x = int(input("input a number"))
-while True:
-    y = 10
-    x += y
-    print(x)
+
+
+def test():
+    x = int(input("input a number"))
+    while True:
+        x += 10
+        print(x)
+test()
