@@ -1,9 +1,8 @@
 
 
 
-def test():
-    x = int(input("input a number"))
-    while True:
-        x += 10
-        print(x)
-test()
+def replace():
+    start_word = "KITK_T"
+    start_word = start_word.replace("_", "A")
+    print(start_word)
+replace()
