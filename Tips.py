@@ -279,3 +279,26 @@ def divide_numbers():
         print("Division attempt complete.")
 
 divide_numbers()
+
+#---------------------------------------------
+##8.Understand the differences in imports as well as why things like 'if name == main' are relevant 
+#---------------------------------------------
+# you can inport library through 
+import <lib>
+# you can inport specific function from the library through 
+from <lib> import <function> 
+# dont import Files both ways it will crash aka File A imports File B ... File B imports File A
+
+
+
+
+#---------------------------------------------
+##Git 
+#---------------------------------------------
+#git has strict order for uploading
+#first initialize via git add .
+#second git commit -m "<message here>"
+#and then git push to push all the changes 
+#for the other way arround you use git pull which is basicly git fetch and git merge combined
+
+
