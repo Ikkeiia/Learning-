@@ -150,6 +150,9 @@ print(text[-1]) # (The last letter)
 
 ##String slicing
 #there is specific patern to string[start:stop:step]
+#[] is an index aka position in the string
+#p[0] == *p         
+#p[1] == *(p+1)
 
 path = "C:/Users/Documents/report.pdf"
 
