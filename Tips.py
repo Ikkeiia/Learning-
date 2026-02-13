@@ -204,11 +204,29 @@ final_list = [f.strip() for f in fruits_list] # ["apple", "banana", "cherry"]
 # 4. Join them back with a dash for a URL slug
 url_slug = "-".join(final_list) # "apple-banana-cherry"
 
+#.split() when spliting the split will create a list that means that we need to choose the index the index for double split [:::] cant be present as it doesnt let you split more
+
+Default_string = """SKU: 32515151jDJASD1924
+SKU: 12389719287498124
+SKU: JKDFLK893479831749
+SKU: fdakf998u3498U(jD(
+SKU: aSDJALKSJD189432719"""
 
 
+list = Default_string.split("SKU: ")[1:]    #start from the first position ignores the empty ''
+final_list = []
 
 
+for x in list:
+    id = x.split("\n")                  #cringe ass split
+    clean_id = id[0]
+    final_list.append(clean_id)
 
+print(final_list)
+
+#takes text up to the point and splits it for position 0 and 1 we need the 1 as thats after the split after we need to split the text up to the next point but choose index 0 as that is before the string in split
+Watchtower_list = HTML.split('<td><span class="img-text"><img alt="')[1].split('" src="/images/thumb/4/46/')[0] 
+print(Watchtower_list)
 
 
 #---------------------------------------------
