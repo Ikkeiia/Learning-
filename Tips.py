@@ -4,16 +4,23 @@
 #you can use midle mouse button to select text verticaly instead of selecting all to the point you can select the whole column and leave the rest untuched
 #---------------------------------------------
 
-
-
-
 ##Formating
 #---------------------------------------------
 #2enters between functions befor and after function
 #---------------------------------------------
 
+##Tuple ()
+#---------------------------------------------
+#Tuple is basically a list you will alwazs see it in your code it is unchangable and is ordered
+#you can check the lenght by using len() function
+#To check which data type touple is you use the type() function
+#---------------------------------------------
 
-##Arrays
+thistuple = ("apple", "banana", "cherry")
+
+
+
+##Arrays []
 #---------------------------------------------
 #An array is a collection of values
 #arrey uses indexing meanig every position is depicitet as an number
@@ -53,11 +60,12 @@ if condition > Value:
 
 
 #---------------------------------------------
-##Dictionaries
+##Dictionaries {}
 #---------------------------------------------
 # are used for creating lists and printing what you want from them
 #the diference from arays is that its chaotic meaning order doesnt matter
 #dictionaries map relationships between keys and values. 
+#to get values from dict you use []
 
 Dict = {'1' : "You like minecraft", '2' : "You dont like minecraft" }       #first is key second is value 
 #you can make nested dictionaries like
@@ -195,3 +203,105 @@ final_list = [f.strip() for f in fruits_list] # ["apple", "banana", "cherry"]
 
 # 4. Join them back with a dash for a URL slug
 url_slug = "-".join(final_list) # "apple-banana-cherry"
+
+
+
+
+
+
+
+
+#---------------------------------------------
+##print formatting, raw strings, strings with 3x " such as """hi""" and when to use them 
+#---------------------------------------------
+#Strings  \t for tab \n for new line
+# """ are basicaly to keep the exact formating of the string that you type inside it.
+
+message = """
+
+Hello
+
+"""                     # prints the message as it looks like
+print(message)
+
+#---------------------------------------------
+##Getting a specific element, unpacking, iterating through every container in python (tuples, dictionaries, arrays, etc) 
+#---------------------------------------------
+#Unpacking allows you to assign list elements to variables in one line
+point = [10, 20]
+x, y = point  # x is 10, y is 20
+
+#iterating, iterating is basicaly repeating one thing  to moove to the goal
+mytuple = "World"  
+for x in mytuple:               
+print(x)                      
+#prints
+#W
+#o
+#r
+#l
+#d
+
+#tuples are are pretty much lists ()
+#Unpacking is used with the * operator it will create a list from the other stuff 
+data = ("User1", "Admin", 25, "New York", "USA")
+name, role, *location = data
+
+# name = "User1"
+# role = "Admin"
+# location = ["25", "New York", "USA"] (the rest are gathered into a list)
+
+#---------------------------------------------
+##More to try-except-else-finally
+#---------------------------------------------
+def divide_numbers():
+    try:
+        # We wrap the risky operations here
+        num1 = int(input("Enter a dividend: "))
+        num2 = int(input("Enter a divisor: "))
+        result = num1 / num2
+        
+    except ValueError:
+        # Triggered if input isn't a number
+        print("Error: You must enter a valid integer!")
+        
+    except ZeroDivisionError:
+        # Triggered if num2 is 0
+        print("Error: You cannot divide by zero!")
+        
+    except Exception as e:
+        # A 'catch-all' for any other unexpected errors
+        print(f"An unexpected error occurred: {e}")
+        
+    else:
+        # Runs ONLY if the try block succeeded
+        print(f"Success! The result is {result}")
+        
+    finally:
+        # Runs every single time
+        print("Division attempt complete.")
+
+divide_numbers()
+
+#---------------------------------------------
+##8.Understand the differences in imports as well as why things like 'if name == main' are relevant 
+#---------------------------------------------
+# you can inport library through 
+import <lib>
+# you can inport specific function from the library through 
+from <lib> import <function> 
+# dont import Files both ways it will crash aka File A imports File B ... File B imports File A
+
+
+
+
+#---------------------------------------------
+##Git 
+#---------------------------------------------
+#git has strict order for uploading
+#first initialize via git add .
+#second git commit -m "<message here>"
+#and then git push to push all the changes 
+#for the other way arround you use git pull which is basicly git fetch and git merge combined
+
+
