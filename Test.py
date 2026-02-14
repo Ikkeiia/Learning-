@@ -1,22 +1,16 @@
-data = """SKU: 32515151jDJASD1924
-SKU: 12389719287498124
-SKU: JKDFLK893479831749
-SKU: fdakf998u3498U(jD(
-SKU: aSDJALKSJD189432719
-"""
+class Pet:
+    sound = "bark"      #class atribute
 
-ids = []
-
-# .splitlines() automatically splits by the hidden \n (newline)
-for line in data.splitlines():
-    # Only process lines that actually contain data
-    if line.strip():
-        # Option A: Slicing (We know "SKU: " is 5 characters long)
-        clean_id = line[5:] 
+    def __init__(self, name, age ) -> None:    #inside the (parameters)
+        self.name = name   #instance.attribute = parameter
+        self.age = age
         
-        # Option B: Replace (Better if you don't want to count indices)
-        # clean_id = line.replace("SKU: ", "")
-        
-        ids.append(clean_id)
+    def introduce(self):               #for the function we need to define the parameter again as self 
+        print(f"hello i am {self.name} and im {self.age}")          
 
-print(ids)
+pet1 = Pet("buddy", 3)   #creating instance(pet1) inside the class aka we store 2 parameters(name, age) 
+pet2 = Pet("albert", 2)
+
+print(pet2.name)     #calling the atribute(name) inside the instance(pet2) 
+
+pet1.introduce()        #here we are calling the function introduce but self will now use the parameters entered when creating the instance
