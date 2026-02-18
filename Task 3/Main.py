@@ -1,139 +1,127 @@
 import time
 import random
+import os
 
 from Entities import characters, enemies
 
 
-
 enemy_array = ["goblin", "skeleton", "slime"]                           #list of enemies
 
-class main:
+#GPTD
+class TickBase:
+    def __init__(self, tick_rate=32):
+        self.tick_interval = 1.0 / tick_rate
+        self.accumulator = 0.0
+        self.last_time = time.perf_counter()
+        self.current_tick = 0
 
-    class TickBase:
-       
-        def __init__(self, tick_rate=64):
-            self.tick_rate = tick_rate
-            self.tick_interval = 1.0 / tick_rate  # Seconds per tick
-            
-            self.current_tick = 0
-            self.start_time = time.perf_counter()
-            self.accumulator = 0.0
-            self.last_time = self.start_time
-            
+    def update(self, callback):
+        now = time.perf_counter()
+        self.accumulator += now - self.last_time
+        self.last_time = now
 
+        while self.accumulator >= self.tick_interval:
+            self.current_tick += 1
+            callback(self.current_tick)
+            self.accumulator -= self.tick_interval
 
+class Entity:
+    def __init__(self,name, health, strenght, defense, attack_speed ) -> None:           #character and enemy statistics
+        self.name = name
+        self.health = health
+        self.strenght = strenght
+        self.defense = defense
+        self.attack_speed = attack_speed
 
-        def update(self, callback):
-            """
-            Calculates elapsed time and runs the callback 
-            for every tick that should have occurred.
-            """
-            now = time.perf_counter()
-            frame_time = now - self.last_time
-            self.last_time = now
-            
-            # Add the time passed since the last frame to our 'bank'
-            self.accumulator += frame_time
-
-            # If we have enough 'banked' time for one or more ticks, run them
-            while self.accumulator >= self.tick_interval:
-                self.current_tick += 1
-                callback(self.current_tick)
-                self.accumulator -= self.tick_interval
+    def is_alive(self):
+        return self.health > 0
 
 
-    class player:
-        
-        
-        def __init__(self, health, strenght, defense, attack_speed ) -> None:           #character statistics
-            self.health = health
-            self.strenght = strenght
-            self.defense = defense
-            self.attack_speed = attack_speed
+class Main:
+    def __init__(self):
+        self.tickbase = TickBase(tick_rate=32)
+        self.player = None
+        self.enemy = None
+        self.logs = []
+        self.is_fighting = False
 
-        def is_alive(self):
-            return self.health > 0
-        
-        
-                #unpacking the info.  I dont need to load all of them if the user chooses one of the characters i guess so bound to change
-        def fighting(self,):
-            enemy = (random.choice(enemy_array))
-
-            
+    def enemy_lottery(self):
+        enemy_choice = (random.choice(enemy_array))
+        data = enemies[enemy_choice]
 
 
+                    # WIP
+    def fighting(self, tick):       
+        ...
+
+    def clear(self):
+        os.system('cls' if os.name == 'nt' else 'clear')
 
 
 
     #loading for prettiness
-        def loading():
-            time.sleep(0.5)
-            print("loading.")
-            time.sleep(0.5)
-            print("loading..")
-            time.sleep(0.5)
-            print("loading...")
+    def loading(self):
+        time.sleep(0.5)
+        print("loading.")
+        time.sleep(0.5)
+        print("loading..")
+        time.sleep(0.5)
+        print("loading...")
 
 
     #Choice menu in future inventory/skills/profile cna be added           
-        def default_menu():
-            user_choice = int(input("""Choose your next adventure
-            1. Fight
-            2. Run
+    def default_menu(self):
+        user_choice = int(input("""Choose your next adventure
+        1. Fight
+        2. Run
+        
+        """))
+        if user_choice == 1:
+            print("You chose to Fight")
+            Main.clear()
+            Main.loading()
+            Main.fighting()
             
-            """))
-            if user_choice == 1:
-                print("You chose to Fight")
-                main.player.loading()
-                main.player.fighting()
-                
 
-            elif user_choice == 2:
-                print("you chose to run")
+        elif user_choice == 2:
+            print("you chose to run")
 
-            else:
-                print("wrong choice")
-                main.player.default_menu()
+        else:
+            print("wrong choice")
+            Main.default_menu()
                        
             
-
-
-
-  
-
-
-
     #character menu selection
-        def character_menu():
-            while True:
-                try:
-                    user_choice = int(input("""
-                    Choose your character: 
-                    1. Akira
-                    2. Simon
-                    3. Igor
-                    
-                    """))    
-                    if user_choice == 1:
-                        print("You chose the character Akira")
-                        player = main.player(**characters["akira"])  
-                        main.player.default_menu()
-                    elif user_choice == 2:
-                        print("you chose the character Simon")
-                        player = main.player(**characters["simon"])
-                        main.player.default_menu()
-                    elif user_choice == 3:
-                        print("you chose the character Igor")
-                        player = main.player(**characters["igor"])
-                        main.player.default_menu()
-                    else:
-                        print("wrong choice")
-                        main.player.character_menu()
-                except ValueError:
-                    ...
+    def character_menu(self):
+        while True:
+            try:
+                user_choice = int(input("""
+                Choose your character: 
+                1. Akira
+                2. Simon
+                3. Igor
+                
+                """))    
+                if user_choice == 1:
+                    print("You chose the character Akira")
+                    player = Main(**characters["akira"])  
+                    Main.default_menu()
+                elif user_choice == 2:
+                    print("you chose the character Simon")
+                    player = Main.Entity(**characters["simon"])
+                    Main.default_menu()
+                elif user_choice == 3:
+                    print("you chose the character Igor")
+                    player = Main(**characters["igor"])
+                    Main.default_menu()
+                else:
+                    print("wrong choice")
+                    Main.character_menu()
+            except ValueError:
+                ...
 
 
 
 
 
-main.player.character_menu()
+Main.character_menu()
