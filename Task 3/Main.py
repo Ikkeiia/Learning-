@@ -8,22 +8,12 @@ from Entities import characters, enemies
 enemy_array = ["goblin", "skeleton", "slime"]                           #list of enemies
 
 #GPTD
-class TickBase:
-    def __init__(self, tick_rate=32):
-        self.tick_interval = 1.0 / tick_rate
-        self.accumulator = 0.0
-        self.last_time = time.perf_counter()
-        self.current_tick = 0
+class TurnBase:
+    def __init__(self, min_turn = 0, max_turn = 100,):
+        self.min_turn = min_turn
+        self.max_turn = max_turn
 
-    def update(self, callback):
-        now = time.perf_counter()
-        self.accumulator += now - self.last_time
-        self.last_time = now
-
-        while self.accumulator >= self.tick_interval:
-            self.current_tick += 1
-            callback(self.current_tick)
-            self.accumulator -= self.tick_interval
+    
 
 class Entity:
     def __init__(self,name, health, strenght, defense, attack_speed ) -> None:           #character and enemy statistics
@@ -39,7 +29,6 @@ class Entity:
 
 class Main:
     def __init__(self):
-        self.tickbase = TickBase(tick_rate=32)
         self.player = None
         self.enemy = None
         self.logs = []
@@ -47,12 +36,17 @@ class Main:
 
     def enemy_lottery(self):
         enemy_choice = (random.choice(enemy_array))
-        data = enemies[enemy_choice]
+        enemy = enemies[enemy_choice]
 
 
                     # WIP
     def fighting(self, tick):       
         ...
+
+    def render(self):
+        print("------Stats------")
+        print(f"Player Health: {enemy.health} \t Enemy Health: {}")
+        print("-----------------")
 
     def clear(self):
         os.system('cls' if os.name == 'nt' else 'clear')
@@ -108,7 +102,7 @@ class Main:
                     Main.default_menu()
                 elif user_choice == 2:
                     print("you chose the character Simon")
-                    player = Main.Entity(**characters["simon"])
+                    player = Main(**characters["simon"])
                     Main.default_menu()
                 elif user_choice == 3:
                     print("you chose the character Igor")
@@ -124,4 +118,4 @@ class Main:
 
 
 
-Main.character_menu()
+Main.enemy_lottery()
