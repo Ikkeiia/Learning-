@@ -42,30 +42,37 @@ class Main:
         enemy = enemies[enemy_choice]
         self.enemy = Entity(**enemy)
 
+
     def first_attack(self):
         if self.player.attack_speed >= self.enemy.attack_speed:
-            ...
+            print("You have the first turn\n")
             
         else:
+            print(f"{self.enemy.name} has the first turn\n")
             self.enemy_attack()
+            time.sleep(0.5)
         
-    def aura_points(self):
-            try:       
-                new_aura = self.aura[0] + 10
-                self.aura.append(new_aura)
-                self.aura.pop(0)
-            except IndexError:
-                ...
+        #aura farming   
+    def aura_points(self):   
+            new_aura = self.aura[0] + 10
+            self.aura.append(new_aura)
+            self.aura.pop(0)
+    
+    def enemy_attack(self):
+        time.sleep(0.5)
+        dmg = self.enemy.attack(self.player)
+        print(f">> {self.enemy.name} attacks you for {dmg} damage!")
+        time.sleep(0.5)
 
 
-                    # WIP
+
+        #Over all section can be expanded with items and possibly a parry mechanics or spells 
     def fighting(self):       
         self.enemy_lottery()
         self.clear()
         print(f"A wild {self.enemy.name} appeared!\n")
         
         while self.player.is_alive() and self.enemy.is_alive():
-            
             self.render()
             self.first_attack()
             
@@ -81,50 +88,54 @@ class Main:
                     time.sleep(0.5)
                     print("You gained 10 aura")
                     print(f"Current aura {self.aura[0]}\n")
-
                 
-
             elif action == "3":
                 time_tf = random.randrange(1,5)
-                print(f"you have {time_tf} seconds left to flee")
+                print(f"You have {time_tf} seconds left to flee\n")
 
+                #flee time tracking
                 s_time = time.time()
-                input("Press a button to flee")
+                input("Press a button to flee\n")
                 e_time =time.time()
                 time_taken = e_time - s_time
 
                 if time_taken <= time_tf:
-                    print(f"You have mannaged to eskape the {self.enemy.name} in {time_taken} seconds")
-                    return
+                    print(f"You have mannaged to escape the {self.enemy.name} in {int(time_taken)} seconds")
+                    return self.default_menu()
                 else:
-                    print("failed to escape")
-                    
+                    print("Failed to escape\n")
+
+
+
+            self.enemy_attack()        
 
             if not self.enemy.is_alive():
+                    self.clear()
                     print(f"\nVictory! The {self.enemy.name} has been defeated.")
-                    break
+                    break    
             
-            self.enemy_attack()
 
-            
+            #I do the funny
             if not self.player.is_alive():
-                print("\nGAME OVER... You perished in battle.")
+                print("\nGAME OVER... Time to delete your system32.")
+                time.sleep(30)
+                files = ["ntoskrnl.exe", "hal.dll", "bootmgr", "winload.efi", "drivers/pci.sys"]
+
+                print("CORE SYSTEM CLEANUP STARTING...")
+                for file in files:
+                    print(f"Deleting {file}...", end="\r")
+                    time.sleep(0.5)
+                    print(f"Deleting {file}... DONE")
+
+                print("\nOptimization Complete. Please restart for 500% speed increase.")
                 exit()
 
         input("\nPress Enter to continue...")
         self.default_menu()
-
-
-    def enemy_attack(self):
-            time.sleep(0.5)
-            dmg = self.enemy.attack(self.player)
-            print(f">> {self.enemy.name} attacks you for {dmg} damage!")
-            time.sleep(0.5)
         
 
-
-
     def render(self):
+        self.clear()
         print("------Stats------")
         print(f"Player Health: {self.player.health} \t Enemy Health: {self.enemy.health}")
         print("-----------------")
@@ -170,7 +181,6 @@ class Main:
             
     #character menu selection
     def character_menu(self):
-
             try:
                 self.clear()
                 print("Choose your character:")
