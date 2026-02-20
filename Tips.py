@@ -331,7 +331,10 @@ from <lib> import <function>
 #class = object
 #To access atributes . neets to be used 
 # __init__ is useed to initialize the object and is core for a class
+#*** for every class it needs to be initialized for you to be able to use it inside your main  aka ***   
 #inside classes functions are called methode
+class NewClass:
+    ...
 
 class Pet:
     sound = "bark"      #class atribute
@@ -339,7 +342,7 @@ class Pet:
     def __init__(self, name, age ) -> None:    #inside the (parameters)
         self.name = name   #instance.attribute = parameter
         self.age = age
-        
+        self.NewClass = NewClass() #***
     def introduce(self):               #for the function we need to define the parameter again as self 
         print(f"hello i am {self.name} and im {self.age}")          
 

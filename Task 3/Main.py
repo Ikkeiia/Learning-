@@ -2,18 +2,19 @@ import time
 import random
 import os
 
+
 from Entities import characters, enemies
+
 
 class TurnBase:
     def __init__(self, turn = 1):
         self.turn = turn
 
     def turn_update(self):
-        return self.turn + 1
+         self.turn += 1
 
     def turn_reset(self):
         self.turn = 1
-
 
 
 
@@ -28,7 +29,7 @@ class Entity:
         self.defense = defense
         self.attack_speed = attack_speed
 
-
+        
     def is_alive(self):
         return self.health > 0
     
@@ -50,6 +51,7 @@ class Main:
     def __init__(self):
         self.player = None
         self.enemy = None
+        self.turns = TurnBase()
 
 
     def enemy_lottery(self):
@@ -59,6 +61,9 @@ class Main:
 
 
     def first_attack(self):
+        if self.turns.turn != 1:
+            return
+
         if self.player.attack_speed >= self.enemy.attack_speed:
             print("You have the first turn\n")
             
@@ -66,6 +71,7 @@ class Main:
             print(f"{self.enemy.name} has the first turn\n")
             self.enemy_attack()
             time.sleep(0.5)
+            
         
         #aura farming   
     def aura_points(self):   
@@ -86,6 +92,7 @@ class Main:
         #Over all section can be expanded with items and possibly a parry mechanics or spells 
     def fighting(self,):       
         self.enemy_lottery()
+        self.turns.turn_reset()
         self.clear()
         print(f"A {self.enemy.name} appeared!\n")
         
@@ -95,6 +102,7 @@ class Main:
             
             #Player turn
             action = input("\n 1: Attack\n 2. Aura farm\n 3.Run? \n")
+            self.turns.turn_update()
 
 
             if action == "1":
@@ -155,7 +163,7 @@ class Main:
     def render(self):
         print("------Stats------")
         print(f"{self.player.name} Health: {self.player.health} \t {self.enemy.name} Health: {self.enemy.health}")
-        print(f"turn: {self.turn}")
+        print(f"Turn: {self.turns.turn}")
         print("-----------------")
         time.sleep(0.5)
 
