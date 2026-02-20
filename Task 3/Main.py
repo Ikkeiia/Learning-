@@ -4,12 +4,24 @@ import os
 
 from Entities import characters, enemies
 
+class TurnBase:
+    def __init__(self, turn = 1):
+        self.turn = turn
+
+    def turn_update(self):
+        return self.turn + 1
+
+    def turn_reset(self):
+        self.turn = 1
+
+
+
 
      
 
 
 class Entity:
-    def __init__(self, name, health, strength, defense, attack_speed) -> None:           #character and enemy statistics
+    def __init__(self, name = 0, health = 0, strength = 0, defense = 0, attack_speed = 0) -> None:           #character and enemy statistics
         self.name = name
         self.health = health
         self.strength = strength
@@ -22,9 +34,12 @@ class Entity:
     
     
     def attack(self, target):
+        strength_value = self.strength * random.randint(0, 4)
+        #need to use max to not allow negative dmg
+        damage = max(0, strength_value - target.defense)
 
-        damage = self.strength * 2 - (target.defense)
         target.health -= damage
+    
         return damage
 
 
@@ -65,19 +80,22 @@ class Main:
         time.sleep(0.5)
 
 
+ 
+
 
         #Over all section can be expanded with items and possibly a parry mechanics or spells 
-    def fighting(self):       
+    def fighting(self,):       
         self.enemy_lottery()
         self.clear()
-        print(f"A wild {self.enemy.name} appeared!\n")
+        print(f"A {self.enemy.name} appeared!\n")
         
         while self.player.is_alive() and self.enemy.is_alive():
             self.render()
             self.first_attack()
             
             #Player turn
-            action = input("\n 1: Attack\n 2. Aura farm\n 3.Run? ")
+            action = input("\n 1: Attack\n 2. Aura farm\n 3.Run? \n")
+
 
             if action == "1":
                 dmg = self.player.attack(self.enemy)
@@ -135,9 +153,9 @@ class Main:
         
 
     def render(self):
-        self.clear()
         print("------Stats------")
-        print(f"Player Health: {self.player.health} \t Enemy Health: {self.enemy.health}")
+        print(f"{self.player.name} Health: {self.player.health} \t {self.enemy.name} Health: {self.enemy.health}")
+        print(f"turn: {self.turn}")
         print("-----------------")
         time.sleep(0.5)
 

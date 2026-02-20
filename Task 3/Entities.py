@@ -7,7 +7,7 @@ characters = {
     "akira" :
             {"name" : "Akira",
             "health" : 90,
-            "strength" : 10,
+            "strength" : 15,
             "defense" : 10,
             "attack_speed" : 10 },
     "igor" :
@@ -19,7 +19,7 @@ characters = {
     "simon" : 
             {"name" : "simon",
             "health" : 100,
-            "strength" : 1,
+            "strength" : 5,
             "defense" : 1,
             "attack_speed" : 1 }
 }

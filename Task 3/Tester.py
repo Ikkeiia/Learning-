@@ -1,15 +1,10 @@
+class TurnBase:
+    def __init__(self, turn = 1):
+        self.turn = turn
 
-aura = [0]
+    def turn_update(self):
+        return self.turn + 1
 
-def aura_points():
-    while True:
-        try:       
-            new_aura = aura[0] + 10
-            aura.append(new_aura)
-            aura.pop(0)
-            print(aura)
+    def turn_reset(self):
+        self.turn = 1
 
-        except IndexError:
-            ...
-
-aura_points()
