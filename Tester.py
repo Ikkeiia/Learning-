@@ -1,3 +1,4 @@
-condition = input(print("do you want to clear the table? Y/n\n"))
+import random
 
-print(condition)
+damage = -10 - random.randint(1, 5)
+print(damage)
