@@ -19,10 +19,12 @@ bot = commands.Bot(command_prefix= '$', description=description, intents=intents
 def top_anime_from_season(year: int, season:str):
     """("Enter your year in the format YYYY")   
     ("enter your season:  summer, spring, fall, winter")"""
-    #url to the request in this case i request by anime id
+    #url to the request 
 
     url = f"https://api.myanimelist.net/v2/anime/season/{year}/{season}?limit=1"
+    print(url)
    
+
     #headers need to be setup for authentification
     headers = {
         'X-MAL-CLIENT-ID': mal_token
@@ -34,41 +36,14 @@ def top_anime_from_season(year: int, season:str):
 
     if response.status_code == 200:
         #for debuging
-        # print(response.json())    
+        print(response.json())    
         
         data = response.json()
         title = (f"Title: {data.get('data')[0].get('node').get('title')}")
-        picture = f"{data.get('data')[0].get('node').get('main_picture').get('large')}"
-        return title, picture
+        picture = (f"Picture: {data.get('data')[0].get('node').get('main_picture').get('large')}")
+        return print(title, picture)
     
     else:
-        return f"Error: {response.text}"
-
-
-
-#so basically i found out that the whole message. is completely wrong and you need to use ctx as in context 
-
-
-@bot.event
-async def on_ready():
-    print(f'We have logged in as {bot.user}')
-
-@bot.command()
-async def topanime(ctx, year:int, season:str):
-    """
-    Usage: $topanime 2024 winter
-    """
-    #thinking
-    async with ctx.typing():
-        title, image_url = top_anime_from_season(year, season.lower())
-        print(image_url)
-
-    if image_url:
-        embed = discord.Embed(title=f"Top anime - {season} {year}", description=title)
-        embed.set_image(url=image_url)
-        await ctx.send(embed=embed)
-    else:
-        await ctx.send(title)
+        return print(f"Error: {response.text}, {response.status_code}")
     
-bot.run(discord_token)
-
+top_anime_from_season(2024, "winter")
