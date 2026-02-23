@@ -352,3 +352,11 @@ pet2 = Pet("albert", 2)
 print(pet2.name)     #calling the atribute(name) inside the instance(pet2) 
 
 pet1.introduce()        #here we are calling the function introduce but self will now use the parameters entered when creating the instance
+
+
+
+#---------------------------------------------
+##API
+#---------------------------------------------
+# Requests are HTTP get requests being transfered with specific header, payload, parameter content
+#
