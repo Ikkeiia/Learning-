@@ -1,38 +1,45 @@
+
 import yt_dlp
 import json
-import os
 import random
 
-song_file = "Songlist.json" 
-score_file = "Score.json"
+class SongGuessing():
+    song_file = "Songlist.json" 
+    score_file = "Score.json"
 
-with open (song_file, "r" ) as sof:                      
-    song_pool = json.load(sof)
+    def __init__(self) -> None:
+        try:
+            with open(self.song_file, "r") as sof:
+                self.song_pool = json.load(sof)
+        except (FileNotFoundError, json.JSONDecodeError):
+            self.song_pool = []
+            print(f"Error: {self.song_file} missing or corrupt.")
 
-with open (score_file, "w" ) as scf:                      
-    
-    ...
-      
+    def get_random_track(self):
+        """Picks a song and fetches the stream link."""
+        if not self.song_pool:
+            return None
+
+        # Pick a random song dict from the pool
+        selected_song = random.choice(self.song_pool)
         
-        # These options tell yt-dlp to just get the info, not download the file
-ydl_opts = {
-    'format': 'bestaudio/best',
-    'noplaylist': True,
-    'quiet': True,
-    'js_runtimes': {'all': {}},
-}
-
-def get_track_info():
-
-    
-
-    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-        # download=False is the key—it just scrapes the metadata and stream URL
-        info = ydl.extract_info(song_pool[random.randint(0,9)].get('url'), download=False)
-        
-        return {
-            'stream_url': info['url'],      # The direct link for FFmpeg
-            'title': info.get('title'),     # For the answer key
-            'duration': info.get('duration')
+        ydl_opts = {
+            'format': 'bestaudio/best',
+            'noplaylist': True,
+            'quiet': True,
         }
-get_track_info()
+
+        with yt_dlp.YoutubeDL(ydl_opts) as ydlp:
+            # We use the URL from our JSON list
+            info = ydlp.extract_info(selected_song.get('url'), download=False)
+            
+            return {
+                'stream_url': info['url'],
+                'answer': selected_song.get('answer'), # Our clean answer
+                'metadata': selected_song.get('metadata'),
+                'duration': info.get('duration')
+            }
+        
+if __name__ == "__main__":
+    play = SongGuessing()
+    print(play.get_random_track())
