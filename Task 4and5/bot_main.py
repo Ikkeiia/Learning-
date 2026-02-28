@@ -2,6 +2,8 @@ import discord
 from discord.ext import commands
 import requests
 
+
+
 #importing tokens for mal and dc bot
 from tokens import mal_token, discord_token
 
