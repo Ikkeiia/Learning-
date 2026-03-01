@@ -2,17 +2,16 @@ import asyncio
 import discord
 import random
 from discord.ext import commands
-from Functions import *
 
-
+##Local imports
 #importing tokens for mal and dc bot
 from tokens import mal_token, discord_token
-
+from Functions import *
 
 mal=MALClient(mal_token)
 game = SongGuessing()
 
-description = 'MAL bot'
+description = 'Anime bot'
 intents = discord.Intents.default()
 intents.message_content = True
 
@@ -73,12 +72,16 @@ async def topanime(ctx):
 
 
 @bot.command()
-async def play(ctx, ran=""):
+async def play(ctx, option=""):
     """
-    Usage: $play / $play -random
+    Usage: 
+    $play 
+    $play -random  random = random start time and random time to guess
     """
     
-
+    track = None
+    global last_played_track 
+    
 
     if not ctx.author.voice:
         return await ctx.send("Join a voice channel first!")
@@ -87,59 +90,79 @@ async def play(ctx, ran=""):
     if not vc:
         vc = await ctx.author.voice.channel.connect()
 
+
     async with ctx.typing():
-        # In a real bot, we'd run this in a thread to prevent lag
-        track = game.get_random_track()
-        print(f"Playing {track['name']} from {track['band']} from {track['show']}") # type: ignore
-    
-    if not track:
-        return await ctx.send("Song pool is empty!")
-    
-    if ran == "":
+        # REPEAT
+        if option == "-again":
+            if last_played_track:
+                track = last_played_track
+                print(f" again debug{last_played_track}") ###debug
+                await ctx.send("🔄 **Replaying the last song...**")
+            else:
+                return await ctx.send("No previous song found to repeat!")
+        else:
+            # Normal play
+            track = game.get_random_track()
+            last_played_track = track 
+            print(f"normal play debug: {last_played_track}") ###debug
+
+    if option == "" or "-again":
+        #timet to guess
+        ttguess = 15
         ffmpeg_params = {
             'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5',
-            'options': '-vn -ss 30 -t 15' 
+            'options': f'-vn -ss 30 -t {ttguess}' 
         }
-    elif ran == "-random":
+    elif option == "-random":
+        ttguess = random.randint(10,15)
+        start_offset = random.randint(1, 40)
+
         ffmpeg_params = {
             'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5',
-            'options': f'-vn -ss {random.randint(1,40)} -t 15' 
+            'options': f'-vn -ss {start_offset} -t {ttguess}' 
         }
     else: await ctx.send("Wrong option")
 
+    if option == "":
+        audio_source = discord.FFmpegPCMAudio(track['stream_url'], 
+        executable="C:/ffmpeg/bin/ffmpeg.exe", 
+        **ffmpeg_params # type: ignore
+        )
+        # print(ffmpeg_params) ###debug
+        await ctx.send(f"🎶 **Guess the anime song!** You have {ttguess} seconds...")
+        vc.play(audio_source)
 
-    audio_source = discord.FFmpegPCMAudio(
-    track['stream_url'], 
-    executable="C:/ffmpeg/bin/ffmpeg.exe", 
-    **ffmpeg_params
-    )
-    print(ffmpeg_params)
-    await ctx.send("🎶 **Guess the anime song!** You have 15 seconds...")
-    vc.play(audio_source)
-    
+    else:
+        audio_source = discord.FFmpegPCMAudio(last_played_track['stream_url'], 
+        executable="C:/ffmpeg/bin/ffmpeg.exe", 
+        **ffmpeg_params # type: ignore
+        )
+        # print(ffmpeg_params) ###debug
+        await ctx.send(f"🎶 **Guess the anime song!** You have {ttguess} seconds...")
+        vc.play(audio_source)
+
+        
     start_time = asyncio.get_event_loop().time()
-    timeout = 15.0
+    timeout = ttguess
 
     def check(message):
         # Must be same channel, not a bot
         return message.channel == ctx.channel and not message.author.bot
     
-    def result_embed():
-        embed1 = discord.Embed(
-            title=f"Correct song: {track['name']}",
-            # Masked link in the description
-            description=(
-                f"**Author:** {track['band']}\n"
-                f"**Anime:** {track['show']}\n\n"
-                f"🔗 **[Watch on YouTube]({track['yt_url']})**"
-            )
+    embed1 = discord.Embed(
+        title=f"Correct song: {track['name']}",
+        # Masked link in the description
+        description=(
+            f"**Author:** {track['band']}\n"
+            f"**Anime:** {track['show']}\n\n"
+            f"🔗 **[Watch on YouTube]({track['yt_url']})**"
         )
+    )
 
-        embed1.set_image(url=track['thumbnail'])
+    embed1.set_image(url=track['thumbnail'])
 
-        # Optional: Keep the raw URL in the footer or remove it for a cleaner look
-        embed1.set_footer(text="Click the link above to listen!")
-        return embed1
+    # Optional: Keep the raw URL in the footer or remove it for a cleaner look
+    embed1.set_footer(text="Click the link above to listen!")
 
     while True:
         # Calculate how much time is actually left
@@ -149,7 +172,8 @@ async def play(ctx, ran=""):
         if remaining <= 0:
             if vc.is_playing():
                 vc.stop()
-            await ctx.send(f"⏰ **Time's up!** No one got it", embed=result_embed())    
+            await ctx.send(f"⏰ **Time's up!** No one got it do you want to try again?")    
+            if 
             break
 
         try:
@@ -157,14 +181,14 @@ async def play(ctx, ran=""):
             guess = await bot.wait_for('message', check=check, timeout=remaining)
             user_guess = guess.content.lower().strip()
             correct_guess = [track['name'].lower(), track['band'].lower(), track['show'].lower()]
-            print(correct_guess)
+            print(correct_guess) ###debug
 
             # Check if correct
             if any(user_guess in ans or ans in user_guess for ans in correct_guess if len(user_guess) > 2):
                 if vc and vc.is_playing():
                     vc.stop()                
 
-                await ctx.send(f"✅ **{guess.author.display_name}** got it! It was", embed=result_embed(),) 
+                await ctx.send(f"✅ **{guess.author.display_name}** got it! It was", embed=embed1,) 
                 break
 
                 
@@ -175,7 +199,7 @@ async def play(ctx, ran=""):
         except asyncio.TimeoutError:
             if vc and vc.is_playing():
                 vc.stop()
-            await ctx.send(f"⏰ **Time's up!** No one got it" , embed=result_embed())
+            await ctx.send(f"⏰ **Time's up!** No one got it" , embed=embed1)
             break
 
 
