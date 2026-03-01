@@ -78,11 +78,12 @@ class SongGuessing:
             'quiet': True,
         }
 
-        with yt_dlp.YoutubeDL(ydl_opts) as ydlp:
+        with yt_dlp.YoutubeDL(ydl_opts) as ydlp: # type: ignore
             info = ydlp.extract_info(selected.get('url'), download=False)
             return {
-                'stream_url': info['url'],
-                'answer': selected.get('answer'),
-                'metadata': selected.get('metadata'),
+                'stream_url': info['url'], # type: ignore
+                'name': selected.get('name'),
+                'band': selected.get('band'),
+                'show': selected.get('show'),
                 'duration': info.get('duration')
             }
