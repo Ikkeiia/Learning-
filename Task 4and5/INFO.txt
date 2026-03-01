@@ -9,7 +9,7 @@ ANIME GUESSING GAME THROUGHT DISCORD
 
 
 Matching system,
-If user matches part of the TITLE or AUTHOR or SOURCE then +1 point to the user
+If user matches part of the TITLE or AUTHOR or SOURCE then +1 point to the user 1/2✅
 
 -make a local conf file that will score the points for the users and then print out the scores
 
@@ -17,13 +17,15 @@ If user matches part of the TITLE or AUTHOR or SOURCE then +1 point to the user
 
 COMMANDS
 repeatsong max2 = if they want to play the part again after the second try song info will be printed with the chat.
-guess = probably the command for guessing? might also be asyn func for the correct answer?
+guess = probably the command for guessing? might also be asyn func for the correct answer? ✅
 
 
 
 
 ISSUES
 some of the songs are in kanji has katakana or hiragana in them that means they will need to be translated and will be part of the list that will rename them automatically?
+
+-no issue as you just make the list so you make it
 
 
 >>idk if i will make it in time lets see<<<
@@ -32,3 +34,11 @@ some of the songs are in kanji has katakana or hiragana in them that means they 
 
 
 So what i want to do is i want to join the bot to the voice and by a command let it play part of the song and let people guess in dedicated chat the one who gguesses will get a point 
+
+randomizer option ✅
+
+dm 
+
+search by url or name 
+
+after guess stop the song ✅

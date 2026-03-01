@@ -80,10 +80,16 @@ class SongGuessing:
 
         with yt_dlp.YoutubeDL(ydl_opts) as ydlp: # type: ignore
             info = ydlp.extract_info(selected.get('url'), download=False)
-            return {
+            return {                
                 'stream_url': info['url'], # type: ignore
+                'yt_url' : selected.get('url'),
                 'name': selected.get('name'),
                 'band': selected.get('band'),
                 'show': selected.get('show'),
+                'thumbnail': info.get('thumbnail'),
                 'duration': info.get('duration')
             }
+        
+# if __name__ == "__main__":
+#     play = SongGuessing()
+#     print(play.get_random_track())
