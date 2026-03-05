@@ -14,6 +14,7 @@ game = SongGuessing()
 description = 'Anime bot'
 intents = discord.Intents.default()
 intents.message_content = True
+intents.voice_states = True
 
 bot = commands.Bot(command_prefix= '$', description=description, intents=intents)
 
@@ -80,33 +81,32 @@ async def play(ctx, option=""):
     """
     
     track = None
-    global last_played_track 
     
+    if not ctx.author.voice:
+            return await ctx.send("Join a voice channel first!")
 
     if not ctx.author.voice:
         return await ctx.send("Join a voice channel first!")
 
+    destination = ctx.author.voice.channel
     vc = ctx.voice_client
-    if not vc:
-        vc = await ctx.author.voice.channel.connect()
+
+    if vc:
+        if vc.channel != destination:
+            await vc.move_to(destination)
+    else:
+        try:
+            vc = await destination.connect()
+        except asyncio.TimeoutError:
+            return await ctx.send("Could not connect to the voice channel in time.")
 
 
     async with ctx.typing():
-        # REPEAT
-        if option == "-again":
-            if last_played_track:
-                track = last_played_track
-                print(f" again debug{last_played_track}") ###debug
-                await ctx.send("🔄 **Replaying the last song...**")
-            else:
-                return await ctx.send("No previous song found to repeat!")
-        else:
-            # Normal play
-            track = game.get_random_track()
-            last_played_track = track 
-            print(f"normal play debug: {last_played_track}") ###debug
+        # Normal play
+        track = game.get_random_track()
+        print(f"normal play debug: {track}") ###debug
 
-    if option == "" or "-again":
+    if option == "":
         #timet to guess
         ttguess = 15
         ffmpeg_params = {
@@ -123,23 +123,15 @@ async def play(ctx, option=""):
         }
     else: await ctx.send("Wrong option")
 
-    if option == "":
-        audio_source = discord.FFmpegPCMAudio(track['stream_url'], 
-        executable="C:/ffmpeg/bin/ffmpeg.exe", 
-        **ffmpeg_params # type: ignore
-        )
-        # print(ffmpeg_params) ###debug
-        await ctx.send(f"🎶 **Guess the anime song!** You have {ttguess} seconds...")
-        vc.play(audio_source)
 
-    else:
-        audio_source = discord.FFmpegPCMAudio(last_played_track['stream_url'], 
-        executable="C:/ffmpeg/bin/ffmpeg.exe", 
-        **ffmpeg_params # type: ignore
-        )
-        # print(ffmpeg_params) ###debug
-        await ctx.send(f"🎶 **Guess the anime song!** You have {ttguess} seconds...")
-        vc.play(audio_source)
+    audio_source = discord.FFmpegPCMAudio(track['stream_url'], 
+    executable="C:/ffmpeg/bin/ffmpeg.exe", 
+    **ffmpeg_params # type: ignore
+    )
+    # print(ffmpeg_params) ###debug
+    await ctx.send(f"🎶 **Guess the anime song!** You have {ttguess} seconds...")
+    vc.play(audio_source)
+
 
         
     start_time = asyncio.get_event_loop().time()
@@ -172,8 +164,7 @@ async def play(ctx, option=""):
         if remaining <= 0:
             if vc.is_playing():
                 vc.stop()
-            await ctx.send(f"⏰ **Time's up!** No one got it do you want to try again?")    
-            if 
+            await ctx.send(f"⏰ **Time's up!** No one got it do you want to try again?")   
             break
 
         try:
